@@ -5,17 +5,21 @@ const gameboard = (()=>{
     const fillBoard = displayBoard.forEach(button => {
         button.innerText = 'X';
     })
-    const score = () => {
-    }
-    const scoreBoard = () => {
-
-    }
     // return methods
     return {fillBoard, score, scoreBoard};
 })();
+const scoreBoard = (()=> {
+    const score = () => {
+
+    }
+    const overallScore = () => {
+
+    }
+    return {score, overallScore};
+})();
 
 const displayController = (() => {
-
+    
 })();
 
 // player

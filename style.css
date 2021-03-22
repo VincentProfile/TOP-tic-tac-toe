@@ -1,12 +1,19 @@
 .header{
+    font-size: 50px;
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 50px;
+    color: #f38181;
+    text-shadow: 5px;
 }
-
+html{
+    background-color: #95e1d3;
+}
 .square{
     width: 100px;
     height: 100px;
     outline: 'none';
+    font-size: 50px;
+    color: #f38181;
 }
 .row{
     display: flex;
@@ -14,6 +21,7 @@
 }
 .gameBoard{
     box-shadow: 5px 10px;
+    color: #f38181;
     width: 300px;
     margin: auto;
 }
@@ -21,22 +29,31 @@
     padding: 5px;
     margin: auto;
 }
-.restartBtn{
-    display: none;
-}
-.startGame, .chooseFirstPlayer, .chooseSecondPlayer{
+.resetGame, .scoreBoard, .startGame, .chooseFirstPlayer, .chooseSecondPlayer{
     display: flex;
     justify-content: center;
     padding: 5px;
     gap: 50px;
 }
-.startBtn{
+.scoreBtn, .startBtn, .restartBtn{
     width: 100px;
     height: 30px;
     outline: 'none';
+    border-radius: 8px;
+    color: #f38181;
+    background-color: #eaffd0;
+}
+.playerName, .player, .computer{
+    outline: 'none';
+    border-radius: 8px;
+    color: #f38181;
+    background-color: #eaffd0;
+}
+Label{
+    color: #f38181;
 }
 .instruction{
     display: flex;
     justify-content: center;
-    padding: 10px;
+    color: #f38181;
 }

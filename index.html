@@ -11,12 +11,15 @@
             <h1 class="header">Tic Tac Toe</h1>
         </header>
         <div class="controllers">
+            <div class="scoreBoard">
+                <button class="scoreBtn">Score Board</button>
+            </div>
             <div class="startGame">
                 <button class="startBtn">Start Game</button>
             </div>
-            <Label class='instruction'>Choose First Player</Label>
+            <h2 class='instruction'>Choose First Player</h2>
             <div class="chooseFirstPlayer">
-                <div class="playerName">
+                <div class="playerNameDiv">
                     <Label>Player Name:</Label>
                     <input type="text" class="firstPlayerName">
                     <button class="playerName" id='playerOneName'>Enter</button>
@@ -25,7 +28,7 @@
                 <button class="computer" id="computerOne">Computer</button>
             </div>
             <div class="chooseSecondPlayer">
-                <div class="playerName">
+                <div class="playerNameDiv">
                     <Label>Player Name:</Label>
                     <input type="text" class="firstPlayerName">
                     <button class="playerName" id='playerTwoName'>Enter</button>
@@ -33,8 +36,9 @@
                 <button class="player" id='playerTwo'>Player</button>
                 <button class="computer" id="computerTwo">Computer</button>
             </div>
-            <div class="restartGame">
+            <div class="resetGame">
                 <button class="restartBtn">Play Again?</button>
+                <button class="restartBtn">Reset Game</button>
             </div>
         </div>
         <div class="gameBoard">
