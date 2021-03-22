@@ -20,6 +20,7 @@ html{
     justify-content: center;
 }
 .gameBoard{
+    display: none;
     box-shadow: 5px 10px;
     color: #f38181;
     width: 300px;
@@ -29,13 +30,13 @@ html{
     padding: 5px;
     margin: auto;
 }
-.resetGame, .scoreBoard, .startGame, .chooseFirstPlayer, .chooseSecondPlayer{
+.scoreBoard, .startGame, .choosePlayer, .resetGame{
     display: flex;
     justify-content: center;
     padding: 5px;
     gap: 50px;
 }
-.scoreBtn, .startBtn, .restartBtn{
+.scoreBtn, .startBtn, .restartBtn, .resetBtn{
     width: 100px;
     height: 30px;
     outline: 'none';
@@ -43,17 +44,31 @@ html{
     color: #f38181;
     background-color: #eaffd0;
 }
-.playerName, .player, .computer{
+.restartBtn, .resetBtn{
+    display: none;
+
+}
+.playerNameBtn, .playerBtn, .computerBtn{
     outline: 'none';
     border-radius: 8px;
     color: #f38181;
     background-color: #eaffd0;
 }
-Label{
+Label, text{
     color: #f38181;
 }
 .instruction{
-    display: flex;
+    /* display originally = flex */
+    display: none;
     justify-content: center;
     color: #f38181;
+}
+.playerNameDiv{
+    display: none;
+}
+.choosePlayerTypeDiv{
+    /* display originally = flex */
+    display: none;
+    gap: 20px;
+    margin: auto;
 }
