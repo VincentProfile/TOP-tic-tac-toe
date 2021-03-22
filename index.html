@@ -7,6 +7,55 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <header>
+            <h1 class="header">Tic Tac Toe</h1>
+        </header>
+        <div class="controllers">
+            <div class="startGame">
+                <button class="startBtn">Start Game</button>
+            </div>
+            <Label class='instruction'>Choose First Player</Label>
+            <div class="chooseFirstPlayer">
+                <div class="playerName">
+                    <Label>Player Name:</Label>
+                    <input type="text" class="firstPlayerName">
+                    <button class="playerName" id='playerOneName'>Enter</button>
+                </div>
+                <button class="player" id='playerOne'>Player</button>
+                <button class="computer" id="computerOne">Computer</button>
+            </div>
+            <div class="chooseSecondPlayer">
+                <div class="playerName">
+                    <Label>Player Name:</Label>
+                    <input type="text" class="firstPlayerName">
+                    <button class="playerName" id='playerTwoName'>Enter</button>
+                </div>
+                <button class="player" id='playerTwo'>Player</button>
+                <button class="computer" id="computerTwo">Computer</button>
+            </div>
+            <div class="restartGame">
+                <button class="restartBtn">Play Again?</button>
+            </div>
+        </div>
+        <div class="gameBoard">
+            <div class="row">
+                <button class="square" id=""></button>
+                <button class="square" id=""></button>
+                <button class="square" id=""></button>
+            </div>
+            <div class="row">
+                <button class="square" id=""></button>
+                <button class="square" id=""></button>
+                <button class="square" id=""></button>
+            </div>
+            <div class="row">
+                <button class="square" id=""></button>
+                <button class="square" id=""></button>
+                <button class="square" id=""></button>
+            </div>
+        </div>
+        <div class="restart">
+        </div>
         <script src='index.js'></script>
     </body>
 </html>

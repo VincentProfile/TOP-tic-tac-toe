@@ -1,0 +1,42 @@
+.header{
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.square{
+    width: 100px;
+    height: 100px;
+    outline: 'none';
+}
+.row{
+    display: flex;
+    justify-content: center;
+}
+.gameBoard{
+    box-shadow: 5px 10px;
+    width: 300px;
+    margin: auto;
+}
+.controllers{
+    padding: 5px;
+    margin: auto;
+}
+.restartBtn{
+    display: none;
+}
+.startGame, .chooseFirstPlayer, .chooseSecondPlayer{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    gap: 50px;
+}
+.startBtn{
+    width: 100px;
+    height: 30px;
+    outline: 'none';
+}
+.instruction{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
