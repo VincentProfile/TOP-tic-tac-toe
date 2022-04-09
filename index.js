@@ -1,30 +1,50 @@
 // module (factory in IIFE)
-const gameboard = (()=>{
+const gameboard = (() => {
     const board = [];
-    const displayBoard = document.querySelectorAll('.square');
-    const fillBoard = displayBoard.forEach(button => {
-        button.innerText = 'X';
-    })
-    // return methods
-    return {fillBoard};
-})();
-
-const scoreBoard = (()=> {
-    const score = () => {
-
+    const squares = document.querySelectorAll('.square');
+    const updateBoard = (e) => {
+        const square = document.getElementById(e.target.id);
+        var square_type = '';
+        if (board.length % 2 && square.innerText === ''){
+            square_type = 'O';
+            board.push(square_type);
+            square.innerText = square_type;
+        }
+        else if (square.innerText === ''){
+            square_type = 'X';
+            board.push(square_type);
+            square.innerText = square_type;
+        }
     }
+    squares.forEach(button => {
+        button.addEventListener('click', updateBoard);
+    });
+    // return methods
+    return { board }
+})();
+const scoreBoard = (() => {
+    // current session
+    const score = () => {
+        gameboard.board.forEach(element => {
+            console.log(element);
+        });
+    }
+    // stored session
     const overallScore = () => {
 
     }
-    return {score, overallScore};
+
+    const scoreBtn = document.querySelector('.scoreBtn');
+    scoreBtn.addEventListener('click', score);
+    return { score, overallScore };
 })();
 
-const playerNames = [];
+
 const displayController = (() => {
+    const players = [];
 
     const choosePlayerTypeDiv = document.querySelector('.choosePlayerTypeDiv');
     const instruction = document.querySelector('.instruction');
-    const startBtn = document.querySelector('.startBtn');
     const playerBtn = document.querySelector('.playerBtn');
     const playerNameDiv = document.querySelector('.playerNameDiv');
     const playerNameBtn = document.querySelector('.playerNameBtn');
@@ -33,78 +53,116 @@ const displayController = (() => {
     const gameBoard = document.querySelector('.gameBoard');
     const resetBtn = document.querySelector('.resetBtn');
 
-    const showPlayerSelection = (sequence) => {
-        if (sequence != 'Second')
-            sequence = 'First';
-        startBtn.style.display = 'none';
 
-        choosePlayerTypeDiv.style.display = 'flex';
-
-        instruction.innerText = `Select ${sequence} Contender`;
-        instruction.style.display = 'flex';
+    const showPlayerTypeDiv = (bool) => {
+        if (bool) {
+            playerNameDiv.style.display = 'none';
+            choosePlayerTypeDiv.style.display = 'unset';
+        }
+        else {
+            // display player name div and button
+            playerNameDiv.style.display = 'unset';
+            // hide player or computer option
+            choosePlayerTypeDiv.style.display = 'none';
+        }
     }
-    startBtn.addEventListener('click', showPlayerSelection);
-
-    const showPlayerNameDiv = () => {
-
-        playerNameDiv.style.display = 'unset';
+    const endOfPlayerSelection = () => {
         choosePlayerTypeDiv.style.display = 'none';
-        playerNameInput.value = '';
+        playerNameDiv.style.display = 'none';
+        instruction.innerText = `${players[0].key} VS ${players[1].key}`;
+        resetBtn.style.display = 'unset';
+        gameBoard.style.display = 'block';
     }
-    playerBtn.addEventListener('click', showPlayerNameDiv);
-
-    const getPlayerName = () => {
-        if (playerNameInput.value != ""){
-            if (playerNames.length < 1){
-                playerNames.push(playerNameInput.value);
-                showPlayerSelection('Second');
+    // player vs player, player vs computer
+    var select_second_player_str = "Select Second Player";
+    var enter_player_name_str = "Enter Player Name";
+    const select_computer_type = () => {
+        if (players.length == 0){
+            players.push({
+                key: "Computer One",
+                value: 1
+            });
+            instruction.innerText = enter_player_name_str;
+            showPlayerTypeDiv(false);
+        }
+        else if (players.length == 1){
+            if (players[0].key.includes("Computer")){
+                instruction.innerText =  enter_player_name_str;
+                showPlayerTypeDiv(false);
             }
             else{
-                playerNames.push(playerNameInput.value);
-                instruction.style.display = 'none';
-                gameBoard.style.display = 'block';
-                resetBtn.style.display = 'unset';
+                players.push({
+                    key: "Computer Two",
+                    value: 1
+                });
+                endOfPlayerSelection();
             }
-            playerNameDiv.style.display = 'none';
         }
     }
-    playerNameBtn.addEventListener('click', getPlayerName);
-
-    const getComputerName = () => {
-        if (playerNames.length < 1){
-            playerNames.push('ComputerOne');
-            showPlayerSelection('Second');
-            computerBtn.style.display = 'none';
+    const select_player_type = () => {
+        instruction.innerText = enter_player_name_str;
+        showPlayerTypeDiv(false);
+    }
+    const enter_player_name = () => {
+        var playerName = playerNameInput.value;
+        if (playerName.length == 0){
+            // do nothing
         }
         else{
-            playerNames.push('ComputerTwo');
-            choosePlayerTypeDiv.style.display = 'none';
-            instruction.style.display = 'none';
-            gameBoard.style.display = 'block';
-            resetBtn.style.display = 'unset';
+            instruction.innerText = select_second_player_str;
+            if (players.length == 0){
+                players.push({
+                    key: playerName,
+                    value: 0
+                });
+                showPlayerTypeDiv(true);
+            }
+            else {
+                players.push({
+                    key: playerName,
+                    value: 1
+                });
+                endOfPlayerSelection();
+            }
         }
+        playerNameInput.value = '';
     }
-    computerBtn.addEventListener('click', getComputerName);
 
-    // return methods 
-    return {};
+    const refreshPage = () => {
+        location.reload();
+    };
+
+    playerBtn.addEventListener('click', select_player_type);
+    computerBtn.addEventListener('click', select_computer_type);
+    playerNameBtn.addEventListener('click', enter_player_name);
+    resetBtn.addEventListener('click', refreshPage);
+
+    return { players }
 })();
+
 
 // player
 const Player = (name) => {
     let score = 0;
+    // instruction for which player's turn
+
+    // method for player's move
 
     // method to update score
 
     // return methods
-    return {};
+    return { name, score };
 };
+// player
+const Computer = (name) => {
+    let score = 0;
+    // instruction for which player's turn
 
-// computer to inherit player's methods
-const computer = (name) => {
-    // methods that I want to inherit inside {}
-    const {} = Player(name);
+    // method for player's move
+
+    // method to update score
 
     // return methods
-    return {}
-}
+    return { name, score };
+};
+

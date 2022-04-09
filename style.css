@@ -1,19 +1,18 @@
 .header{
     font-size: 50px;
     text-align: center;
-    padding-bottom: 50px;
-    color: #f38181;
+    color: #1A132F;
     text-shadow: 5px;
 }
 html{
-    background-color: #95e1d3;
+    background-color: #5B7DB1;
 }
 .square{
     width: 100px;
     height: 100px;
     outline: 'none';
     font-size: 50px;
-    color: #f38181;
+    color: #1A132F;
 }
 .row{
     display: flex;
@@ -21,13 +20,10 @@ html{
 }
 .gameBoard{
     display: none;
+    /* visibility: hidden; */
     box-shadow: 5px 10px;
-    color: #f38181;
+    color: #1A132F;
     width: 300px;
-    margin: auto;
-}
-.controllers{
-    padding: 5px;
     margin: auto;
 }
 .scoreBoard, .startGame, .choosePlayer, .resetGame{
@@ -40,35 +36,40 @@ html{
     width: 100px;
     height: 30px;
     outline: 'none';
-    border-radius: 8px;
-    color: #f38181;
-    background-color: #eaffd0;
+    border-radius: 5px;
+    color: #1A132F;
+    background-color: #61A4BC;
 }
 .restartBtn, .resetBtn{
     display: none;
+    /* visibility: hidden; */
 
 }
 .playerNameBtn, .playerBtn, .computerBtn{
     outline: 'none';
-    border-radius: 8px;
-    color: #f38181;
-    background-color: #eaffd0;
+    width: 100px;
+    height: 30px;
+    margin: 5px;
+    border-radius: 5px;
+    color: #1A132F;
+    background-color: #61A4BC;
 }
 Label, text{
-    color: #f38181;
+    color: #1A132F;
 }
 .instruction{
-    /* display originally = flex */
-    display: none;
+    display: flex;
+    /* display: none; */
     justify-content: center;
-    color: #f38181;
+    color: #1A132F;
 }
 .playerNameDiv{
     display: none;
 }
 .choosePlayerTypeDiv{
     /* display originally = flex */
-    display: none;
+    /* display: none; */
+    /* visibility: hidden; */
     gap: 20px;
     margin: auto;
 }
