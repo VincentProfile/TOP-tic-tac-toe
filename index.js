@@ -1,21 +1,64 @@
 // module (factory in IIFE)
 const gameboard = (() => {
+    const winning_board = [
+        [1,2,3], [4,5,6], [7,8,9],
+        [1,4,7], [2,5,8], [3,6,9],
+        [1,5,9], [3,5,7]
+    ]
     const board = [];
     const squares = document.querySelectorAll('.square');
+    const check_winner = () => {
+        console.log("player one: " + player_one.get_player_moves());
+        console.log("player two: "+player_two.get_player_moves());
+        let winner = "";
+        let game_complete = false; 
+        winning_board.forEach(board => {
+            if (board.every(pos => player_one.get_player_moves().includes(pos.toString()))){
+                winner = player_one.getName();
+                game_complete = true;
+            }
+            else if (board.every(pos => player_two.get_player_moves().includes(pos.toString()))){
+                winner = player_two.getName();
+                game_complete = true;
+            }
+            else if (player_one.get_player_moves().length == 5 && game_complete == false){
+                winner = "DRAW";
+                game_complete = true;
+            }
+        });
+        
+        return {game_complete, winner};
+    };
+
     const updateBoard = (e) => {
         const square = document.getElementById(e.target.id);
         var square_type = '';
-        if (board.length % 2 && square.innerText === ''){
+        if (board.length % 2 && square.innerText === '') {
             square_type = 'O';
             board.push(square_type);
+            player_two.updatePlayerMove(e.target.id);
             square.innerText = square_type;
         }
-        else if (square.innerText === ''){
+        else if (square.innerText === '') {
             square_type = 'X';
             board.push(square_type);
+            player_one.updatePlayerMove(e.target.id);
             square.innerText = square_type;
         }
-    }
+        // check winning condition after every turn
+        result = check_winner();
+        if (result.game_complete) {
+            if (result.winner.includes("DRAW")){
+                displayController.instruction.innerText = result.winner;
+            }else{
+                displayController.instruction.innerText = result.winner + " IS THE WINNER!";
+            }
+            squares.forEach(btn => {
+                btn.disabled = true;
+            })
+            displayController.restartBtn.style.display = 'unset';
+        };
+    };
     squares.forEach(button => {
         button.addEventListener('click', updateBoard);
     });
@@ -40,9 +83,36 @@ const scoreBoard = (() => {
 })();
 
 
-const displayController = (() => {
-    const players = [];
+// player
+const Player = () => {
+    let total_score;
+    let playerMoves = [];
+    let name;
+    const getName = () => name;
+    const setName = (player_name) => {
+        name = player_name;
+    }
+    const get_player_moves = () => playerMoves;
+    const updatePlayerMove = (move) => {
+        playerMoves.push(move);
+    }
+    const getScore = () => total_score;
+    const updatePlayerScore = (score) => {
+        total_score += score;
+    }
+    // return methods
+    return {
+        getName, setName,
+        get_player_moves, updatePlayerMove,
+        getScore, updatePlayerScore
+    };
+};
 
+const player_one = Player();
+const player_two = Player();
+
+const displayController = (() => {
+    let no_players = 0;
     const choosePlayerTypeDiv = document.querySelector('.choosePlayerTypeDiv');
     const instruction = document.querySelector('.instruction');
     const playerBtn = document.querySelector('.playerBtn');
@@ -52,7 +122,7 @@ const displayController = (() => {
     const playerNameInput = document.querySelector('.playerName');
     const gameBoard = document.querySelector('.gameBoard');
     const resetBtn = document.querySelector('.resetBtn');
-
+    const restartBtn = document.querySelector('.restartBtn');
 
     const showPlayerTypeDiv = (bool) => {
         if (bool) {
@@ -69,7 +139,7 @@ const displayController = (() => {
     const endOfPlayerSelection = () => {
         choosePlayerTypeDiv.style.display = 'none';
         playerNameDiv.style.display = 'none';
-        instruction.innerText = `${players[0].key} VS ${players[1].key}`;
+        instruction.innerText = `${player_one.getName()} VS ${player_two.getName()}`;
         resetBtn.style.display = 'unset';
         gameBoard.style.display = 'block';
     }
@@ -77,24 +147,20 @@ const displayController = (() => {
     var select_second_player_str = "Select Second Player";
     var enter_player_name_str = "Enter Player Name";
     const select_computer_type = () => {
-        if (players.length == 0){
-            players.push({
-                key: "Computer One",
-                value: 1
-            });
+        if (no_players == 0) {
+            no_players += 1;
+            player_one.setName("Computer One");
             instruction.innerText = enter_player_name_str;
             showPlayerTypeDiv(false);
         }
-        else if (players.length == 1){
-            if (players[0].key.includes("Computer")){
-                instruction.innerText =  enter_player_name_str;
+        else if (no_players == 1) {
+            if (player_one.getName().includes("Computer")) {
+                instruction.innerText = enter_player_name_str;
                 showPlayerTypeDiv(false);
             }
-            else{
-                players.push({
-                    key: "Computer Two",
-                    value: 1
-                });
+            else {
+                no_players += 1;
+                player_two.setName("Computer Two");
                 endOfPlayerSelection();
             }
         }
@@ -105,25 +171,20 @@ const displayController = (() => {
     }
     const enter_player_name = () => {
         var playerName = playerNameInput.value;
-        if (playerName.length == 0){
+        if (playerName.length == 0) {
             // do nothing
         }
-        else{
+        else {
             instruction.innerText = select_second_player_str;
-            if (players.length == 0){
-                players.push({
-                    key: playerName,
-                    value: 0
-                });
+            if (no_players == 0) {
+                player_one.setName(playerName);
                 showPlayerTypeDiv(true);
             }
             else {
-                players.push({
-                    key: playerName,
-                    value: 1
-                });
+                player_two.setName(playerName);
                 endOfPlayerSelection();
             }
+            no_players += 1;
         }
         playerNameInput.value = '';
     }
@@ -137,32 +198,8 @@ const displayController = (() => {
     playerNameBtn.addEventListener('click', enter_player_name);
     resetBtn.addEventListener('click', refreshPage);
 
-    return { players }
+    return { restartBtn, instruction }
 })();
 
 
-// player
-const Player = (name) => {
-    let score = 0;
-    // instruction for which player's turn
-
-    // method for player's move
-
-    // method to update score
-
-    // return methods
-    return { name, score };
-};
-// player
-const Computer = (name) => {
-    let score = 0;
-    // instruction for which player's turn
-
-    // method for player's move
-
-    // method to update score
-
-    // return methods
-    return { name, score };
-};
 
