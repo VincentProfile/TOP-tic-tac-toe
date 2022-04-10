@@ -31,20 +31,50 @@ const gameboard = (() => {
         displayController.squares_enabled(true);
 
     }
+    const computer_move = (player) => {
+        const o_square = 'O';
+        const x_square = 'X';
+        // generate random number and check if square is filled
+        let random_no = 0;
+        while (true){
+            // random number between 1-9
+            random_no = Math.floor(Math.random() * 9) + 1;
+            if (!board.includes(random_no)){
+                break;
+            }
+        }
+        const random_square = document.getElementById(random_no.toString());
+        if (player === player_one){
+            random_square.innerText = x_square;
+        }else{
+            random_square.innerText = o_square;
+        }
+        board.push(random_no);
+        player.updatePlayerMove(random_no);
+    }
     const updateBoard = (e) => {
         const square = document.getElementById(e.target.id);
-        var square_type = '';
+        const o_square = 'O';
+        const x_square = 'X';
+        // second player
         if (board.length % 2 && square.innerText === '') {
-            square_type = 'O';
-            board.push(square_type);
+            board.push(parseInt(e.target.id));
             player_two.updatePlayerMove(e.target.id);
-            square.innerText = square_type;
+            square.innerText = o_square;
+            
+            if (player_one.getName().includes("Computer")){
+                computer_move(player_one);
+            }
         }
+        // first player
         else if (square.innerText === '') {
-            square_type = 'X';
-            board.push(square_type);
+            board.push(parseInt(e.target.id));
             player_one.updatePlayerMove(e.target.id);
-            square.innerText = square_type;
+            square.innerText = x_square;
+
+            if (player_two.getName().includes("Computer")){
+                computer_move(player_two);
+            }
         }
         // check winning condition after every turn
         result = check_winner();
@@ -65,8 +95,7 @@ const gameboard = (() => {
     squares.forEach(button => {
         button.addEventListener('click', updateBoard);
     });
-    // return methods
-    return { board, clear_gameboard }
+    return { board, clear_gameboard, computer_move }
 })();
 const scoreBoard = (() => {
     let score = [];
@@ -155,7 +184,7 @@ const displayController = (() => {
     const playerNameBtn = document.querySelector('.playerNameBtn');
     const computerBtn = document.querySelector('.computerBtn');
     const playerNameInput = document.querySelector('.playerName');
-    const gameBoard = document.querySelector('.gameBoard');
+    const gameBoardDiv = document.querySelector('.gameBoard');
     const resetBtn = document.querySelector('.resetBtn');
     const restartBtn = document.querySelector('.restartBtn');
     const scoreBoard = document.querySelector('.score');
@@ -179,7 +208,10 @@ const displayController = (() => {
         playerNameDiv.style.display = 'none';
         instruction.innerText = `${player_one.getName()} VS ${player_two.getName()}`;
         resetBtn.style.display = 'unset';
-        gameBoard.style.display = 'block';
+        gameBoardDiv.style.display = 'block';
+        if (player_one.getName().includes("Computer")){
+            gameboard.computer_move(player_one);
+        }
     }
     // player vs player, player vs computer
     var select_second_player_str = "Select Second Player";
