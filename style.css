@@ -30,7 +30,7 @@ html{
     display: flex;
     justify-content: center;
     padding: 5px;
-    gap: 50px;
+    gap: 30px;
 }
 .scoreBtn, .startBtn, .restartBtn, .resetBtn{
     width: 100px;
@@ -40,7 +40,7 @@ html{
     color: #1A132F;
     background-color: #61A4BC;
 }
-.restartBtn, .resetBtn{
+.restartBtn, .resetBtn, .scoreBtn{
     display: none;
     /* visibility: hidden; */
 

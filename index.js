@@ -5,11 +5,8 @@ const gameboard = (() => {
         [1,4,7], [2,5,8], [3,6,9],
         [1,5,9], [3,5,7]
     ]
-    const board = [];
-    const squares = document.querySelectorAll('.square');
+    let board = [];
     const check_winner = () => {
-        console.log("player one: " + player_one.get_player_moves());
-        console.log("player two: "+player_two.get_player_moves());
         let winner = "";
         let game_complete = false; 
         winning_board.forEach(board => {
@@ -29,7 +26,11 @@ const gameboard = (() => {
         
         return {game_complete, winner};
     };
+    const clear_gameboard = () => {
+        board = [];
+        displayController.squares_enabled(true);
 
+    }
     const updateBoard = (e) => {
         const square = document.getElementById(e.target.id);
         var square_type = '';
@@ -50,42 +51,78 @@ const gameboard = (() => {
         if (result.game_complete) {
             if (result.winner.includes("DRAW")){
                 displayController.instruction.innerText = result.winner;
+                scoreBoard.current_score();
             }else{
+                scoreBoard.updateScore(result.winner);
                 displayController.instruction.innerText = result.winner + " IS THE WINNER!";
             }
-            squares.forEach(btn => {
-                btn.disabled = true;
-            })
-            displayController.restartBtn.style.display = 'unset';
+            displayController.squares_enabled(false);
+            displayController.show_end_game_controllers(true);
+
         };
     };
+    const squares = document.querySelectorAll('.square');
     squares.forEach(button => {
         button.addEventListener('click', updateBoard);
     });
     // return methods
-    return { board }
+    return { board, clear_gameboard }
 })();
 const scoreBoard = (() => {
-    // current session
-    const score = () => {
-        gameboard.board.forEach(element => {
-            console.log(element);
-        });
+    let score = [];
+    // retrieve stored session
+    const loadScores = () => {
+        if (localStorage.getItem('Score') !== null){
+            score = JSON.parse(localStorage.getItem('Score'));
+        }
     }
-    // stored session
-    const overallScore = () => {
+    // need to fix this issue
+    const updateScore = (p_name) => {
+        loadScores();
+        console.log(score);
+        if (score.length == 0 || score.find(x => x.name  === p_name)){
+            score[score.findIndex(x => x.name === p_name)].score += 1;
+        }
+        else
+        {
+            score.push({
+                name: p_name,
+                score: 1,
+            })
+        }
+        localStorage.setItem('Score', JSON.stringify(score));
+        current_score();
+    }
 
+    const current_score = () => {
+        p1_score_index = score.findIndex(x=>x.name === player_one.getName());
+        p1_score = 0;
+        if (p1_score_index !== -1){
+            p1_score = score[p1_score_index].score;
+        }
+        else{
+            p1_score = 0;
+        }
+        p2_score_index = score.findIndex(x=>x.name === player_two.getName());
+        p2_score = 0;
+        if (p2_score_index !== -1){
+            p2_score = score[p2_score_index].score;
+        }
+        else{
+            p2_score = 0;
+        }
+        displayController.scoreBoard.innerText = player_one.getName() + ": " + p1_score + 
+                                        " VS " + player_two.getName() + ": " + p2_score;
     }
 
     const scoreBtn = document.querySelector('.scoreBtn');
     scoreBtn.addEventListener('click', score);
-    return { score, overallScore };
+    return { score, loadScores, updateScore, current_score };
 })();
 
 
 // player
 const Player = () => {
-    let total_score;
     let playerMoves = [];
     let name;
     const getName = () => name;
@@ -96,15 +133,13 @@ const Player = () => {
     const updatePlayerMove = (move) => {
         playerMoves.push(move);
     }
-    const getScore = () => total_score;
-    const updatePlayerScore = (score) => {
-        total_score += score;
+    const clearPlayerMoves = () => {
+        playerMoves = [];
     }
     // return methods
     return {
         getName, setName,
-        get_player_moves, updatePlayerMove,
-        getScore, updatePlayerScore
+        get_player_moves, updatePlayerMove, clearPlayerMoves
     };
 };
 
@@ -123,6 +158,9 @@ const displayController = (() => {
     const gameBoard = document.querySelector('.gameBoard');
     const resetBtn = document.querySelector('.resetBtn');
     const restartBtn = document.querySelector('.restartBtn');
+    const scoreBoard = document.querySelector('.score');
+    const scoreBtn = document.querySelector('.scoreBtn');
+    const squares = document.querySelectorAll('.square');
 
     const showPlayerTypeDiv = (bool) => {
         if (bool) {
@@ -192,13 +230,50 @@ const displayController = (() => {
     const refreshPage = () => {
         location.reload();
     };
+    
+    const show_end_game_controllers = (bool) => {
+        if (bool){
+            scoreBtn.style.display = 'unset';
+            restartBtn.style.display = 'unset';
+        }else{
+            scoreBtn.style.display = 'none';
+            restartBtn.style.display = 'none';
+        }
+    }
+    
+    const squares_enabled = (bool) => {
+        if (bool){
+            squares.forEach(btn => {
+                btn.innerText = '';
+                btn.disabled = false;
+            })
+        }else{
+            squares.forEach(btn => {
+                btn.disabled = true;
+            })
+        }
+    }
+
+    const restartGame = () => {
+        show_end_game_controllers(false);
+        // clear gameboard
+        gameboard.clear_gameboard();
+        squares_enabled(true);
+        // hide score text and instruction
+        scoreBoard.innerText = '';
+        instruction.innerText = '';
+        player_one.clearPlayerMoves();
+        player_two.clearPlayerMoves();
+    }
 
     playerBtn.addEventListener('click', select_player_type);
     computerBtn.addEventListener('click', select_computer_type);
     playerNameBtn.addEventListener('click', enter_player_name);
     resetBtn.addEventListener('click', refreshPage);
+    restartBtn.addEventListener('click', restartGame);
 
-    return { restartBtn, instruction }
+
+    return { restartBtn, instruction, scoreBoard, squares, show_end_game_controllers, squares_enabled }
 })();
 
 
