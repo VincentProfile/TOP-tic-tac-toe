@@ -187,7 +187,7 @@ const scoreBoard = (() => {
     const updateScore = (p_name) => {
         loadScores();
         console.log(score);
-        if ((score.length == 0) || score.find(x=>x.name == p_name) == undefined){
+        if ((score.length == 0) || score.find(x=>x.name == p_name) != true){
             score.push({
                 name: p_name,
                 score: 1,
