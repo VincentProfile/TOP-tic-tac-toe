@@ -186,8 +186,7 @@ const scoreBoard = (() => {
     // need to fix this issue
     const updateScore = (p_name) => {
         loadScores();
-        console.log(score);
-        if ((score.length == 0) || score.find(x=>x.name == p_name) != true){
+        if ((score.length == 0) || score.find(x=>x.name == p_name).score == undefined){
             score.push({
                 name: p_name,
                 score: 1,
@@ -372,8 +371,6 @@ const displayController = (() => {
         instruction.innerText = '';
         player_one.clearPlayerMoves();
         player_two.clearPlayerMoves();
-
-        scoreBoard.updateScore();
         if (player_one.getName().includes("Computer")){
             gameboard.computer_move(player_one);
         }
