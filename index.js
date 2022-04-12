@@ -187,14 +187,14 @@ const scoreBoard = (() => {
     const updateScore = (p_name) => {
         loadScores();
         console.log(score);
-        if (score.length == 0 || score.find(x => x.name === p_name)) {
-            score[score.findIndex(x => x.name === p_name)].score += 1;
-        }
-        else {
+        if ((score.length == 0) || score.find(x=>x.name == p_name) == undefined){
             score.push({
                 name: p_name,
                 score: 1,
-            })
+            });
+        }
+        else {
+            score[score.findIndex(x => x.name === p_name)].score += 1;
         }
         localStorage.setItem('Score', JSON.stringify(score));
         current_score();
