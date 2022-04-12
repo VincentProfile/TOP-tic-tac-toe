@@ -373,6 +373,7 @@ const displayController = (() => {
         player_one.clearPlayerMoves();
         player_two.clearPlayerMoves();
 
+        scoreBoard.updateScore();
         if (player_one.getName().includes("Computer")){
             gameboard.computer_move(player_one);
         }
