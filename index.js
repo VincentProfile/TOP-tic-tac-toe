@@ -6,7 +6,6 @@ const gameboard = (() => {
         [1, 5, 9], [3, 5, 7]
     ]
     let board = [];
-    let remaining_moves = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const check_winner = () => {
         let winner = "";
         let game_complete = false;
@@ -22,7 +21,7 @@ const gameboard = (() => {
                 game_complete = true;
                 score = 'O';
             }
-            else if (player_one.get_player_moves().length == 5 && game_complete == false) {
+            else if (board.length == 9 && game_complete == false){
                 winner = "DRAW";
                 game_complete = true;
                 score = 'DRAW';
@@ -32,41 +31,15 @@ const gameboard = (() => {
     };
     const clear_gameboard = () => {
         board = [];
-        remaining_moves = [1,2,3,4,5,6,7,8,9];
         displayController.squares_enabled(true);
-    }
-    const minimax = (moves, depth, maximising) => {
-        // base condition
-        let result = check_winner();
-        if (result.game_complete != null){
-            return scoreBoard.score_reference[result.score];
-        }
-        // recursion
-        if (maximising){
-            let bestScore = -Infinity;
-            moves.forEach(move => {
-                board.push(move);
-                let score = minimax(board, depth + 1, false);
-                board.pop();
-                bestScore = max(score, bestScore);
-            });
-        }
-        else{
-            let bestScore = Infinity;
-            moves.forEach(move => {
-                board.push(move);
-                let score = minimax(board, depth + 1, true);
-                board.pop();
-                bestScore = min(score, bestscore);
-            })
-        }
-        console.log(bestScore);
-        return bestScore;
     }
     const computer_move = (player) => {
         const o_square = 'O';
         const x_square = 'X';
-
+        // check winner before move
+        if (check_winner().game_complete){
+            return;
+        }
         // random move by computer
         let random_no = 0;
         while (true){
@@ -84,51 +57,12 @@ const gameboard = (() => {
         }
 
         board.push(random_no);
-        remaining_moves.splice(remaining_moves.indexOf(random_no), 1);
-        player.updatePlayerMove(random_no);
+        player.updatePlayerMove(random_no.toString());
+
+        // check winner after random move
+        check_winner();
 
         // using mini max algorithm
-        // let square;
-        // let maximising;
-        // let bestScore;
-        // let bestMove;
-        // if (player === player_one) {
-        //     maximising = true;
-        //     square = x_square;
-        //     bestScore = Infinity;
-
-        //     remaining_moves.forEach(move => {
-        //         board.push(move);
-        //         let score = minimax(remaining_moves, 0, maximising);
-        //         board.pop();
-        //         if (score > bestScore){
-        //             bestScore = score;
-        //             bestMove = move;
-        //         }
-        //     })
-        // }
-        // else {
-        //     maximising = false;
-        //     square = o_square;
-        //     bestScore = -Infinity;
-
-        //     remaining_moves.forEach(move => {
-        //         board.push(move);
-        //         let score = minimax(remaining_moves, 0, maximising);
-        //         board.pop();
-        //         if (score < bestScore){
-        //             bestScore = score;
-        //             bestMove = move;
-        //         }
-        //     })
-        // }
-
-        // const computer_square = document.getElementById(bestMove.toString());
-        // computer_square.innerText = square;
-        // board.push(bestMove);
-        // remaining_moves.splice(remaining_moves.indexOf(bestMove), 1);
-        // player.updatePlayerMove(bestMove);
-
     }
     const updateBoard = (e) => {
         const square = document.getElementById(e.target.id);
@@ -137,27 +71,20 @@ const gameboard = (() => {
         // second player
         if (board.length % 2 && square.innerText === '') {
             board.push(parseInt(e.target.id));
-            remaining_moves.splice(remaining_moves.indexOf(parseInt(e.target.id)), 1);
-            console.log(remaining_moves);
             player_two.updatePlayerMove(e.target.id);
             square.innerText = o_square;
-            if (check_winner().game_complete){
-                // do nothing;
-            }
-            else if (player_one.getName().includes("Computer")) {
+            
+            if (player_one.getName().includes("Computer")) {
                 computer_move(player_one);
             }
         }
         // first player
         else if (square.innerText === '') {
             board.push(parseInt(e.target.id));
-            remaining_moves.splice(remaining_moves.indexOf(e.target.id), 1);
             player_one.updatePlayerMove(e.target.id);
             square.innerText = x_square;
-            if (check_winner().game_complete){
-                // do nothing;
-            }
-            else if (player_two.getName().includes("Computer")) {
+
+            if (player_two.getName().includes("Computer")) {
                 computer_move(player_two);
             }
         }
@@ -186,7 +113,7 @@ const scoreBoard = (() => {
     // need to fix this issue
     const updateScore = (p_name) => {
         loadScores();
-        if ((score.length == 0) || score.find(x=>x.name == p_name).score == undefined){
+        if ((score.length == 0) || !score.find(x=>x.name == p_name)){
             score.push({
                 name: p_name,
                 score: 1,
